@@ -1,32 +1,30 @@
-const express=require('express');
-const authRouter=express.Router();
-const User=require('../models/user');
+const express = require('express');
+const authRouter = express.Router();
+const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
-
-
-
+const jwt = require('jsonwebtoken');
 
 authRouter.post("/api/signup", async (req, res) => {
-    console.log("Received Data:", req.body); // Debugging log
+    console.log("Received Data:", req.body);
 
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
         return res.status(400).json({ message: "All fields are required" });
     }
-   
+
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
 
-       const hashedpassword= await bcryptjs.hash(password,8);
+        const hashedpassword = await bcryptjs.hash(password, 8);
 
         let user = new User({
             name,
             email,
-            password:hashedpassword,
+            password: hashedpassword,
         });
 
         await user.save();
@@ -37,5 +35,33 @@ authRouter.post("/api/signup", async (req, res) => {
     }
 });
 
+// Signin route - FIXED
+authRouter.post("/api/signin", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
 
-module.exports=authRouter;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        const isMatch = await bcryptjs.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        const token = jwt.sign({ id: user._id }, "passwordkey", { expiresIn: "1h" });
+
+        const { password: _, ...userData } = user._doc;
+        res.json({ token, user: userData });
+
+    } catch (e) {
+        console.error("Signin Error:", e);
+        return res.status(500).json({ message: "Internal server error", error: e.message });
+    }
+});
+
+module.exports = authRouter;

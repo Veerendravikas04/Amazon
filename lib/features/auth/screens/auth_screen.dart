@@ -26,8 +26,6 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  
-
   @override
   void dispose() {
     super.dispose();
@@ -92,18 +90,24 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: Column(
                       children: [
                         CustomTextField(
-                            controller: _nameController, hintText: "Name"),
+                          controller: _nameController,
+                          hintText: "Name",
+                          leadingIcon: Icons.person,
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
                         CustomTextField(
-                            controller: _emailController, hintText: "Email"),
+                            controller: _emailController,
+                            hintText: "Email",
+                            leadingIcon: Icons.email),
                         const SizedBox(
                           height: 10,
                         ),
                         CustomTextField(
                             controller: _passwordController,
-                            hintText: "Password"),
+                            hintText: "Password",
+                            leadingIcon: Icons.lock),
                         const SizedBox(
                           height: 10,
                         ),
@@ -154,13 +158,16 @@ class _AuthScreenState extends State<AuthScreen> {
                         //   height: 10,
                         // ),
                         CustomTextField(
-                            controller: _emailController, hintText: "Email"),
+                            controller: _emailController,
+                            hintText: "Email",
+                            leadingIcon: Icons.email),
                         const SizedBox(
                           height: 10,
                         ),
                         CustomTextField(
                             controller: _passwordController,
-                            hintText: "Password"),
+                            hintText: "Password",
+                            leadingIcon: Icons.lock),
                         const SizedBox(
                           height: 10,
                         ),
