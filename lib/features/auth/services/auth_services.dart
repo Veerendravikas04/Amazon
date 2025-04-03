@@ -37,11 +37,11 @@ class AuthService {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, "Account created successfully!");
+          showSnackBar(context, "Account created successfully!", Colors.green);
         },
       );
     } catch (e) {
-      showSnackBar(context, "Error: ${e.toString()}");
+      showSnackBar(context, "Error: ${e.toString()}", Colors.red);
     }
   }
 }
