@@ -16,6 +16,7 @@ void httpErrorHandle({
     case 400:
     case 500:
       String message = jsonDecode(response.body)['message'] ?? "Error occurred";
+      print(message);
       showSnackBar(context, message, Colors.red);
       break;
     default:
