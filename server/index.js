@@ -7,6 +7,7 @@ const authRouter = require('./routes/auth');
 app.use(express.json());
 app.use(authRouter);
 
+
 const port = 3000;
 
 const Db = "mongodb+srv://vikas:Vikas%4004@cluster0.evofsox.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";

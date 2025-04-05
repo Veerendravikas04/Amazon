@@ -32,9 +32,7 @@ class AuthService {
       http.Response res = await http.post(
         Uri.parse('$uri/api/signup'),
         body: user.toJson(),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
       );
 
       httpErrorHandle(
@@ -45,12 +43,10 @@ class AuthService {
         },
       );
     } catch (e) {
-      print(e.toString());
       showSnackBar(context, "Error: ${e.toString()}", Colors.red);
     }
   }
 
-  //sign in user
   Future<void> signInUser({
     required String email,
     required String password,
@@ -59,15 +55,10 @@ class AuthService {
     try {
       http.Response res = await http.post(
         Uri.parse('$uri/api/signin'),
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        body: jsonEncode({'email': email, 'password': password}),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
       );
-      // print(res.body);
+
       httpErrorHandle(
         response: res,
         context: context,
@@ -83,7 +74,41 @@ class AuthService {
         },
       );
     } catch (e) {
-      // print(e.toString());
+      showSnackBar(context, "Error: ${e.toString()}", Colors.red);
+    }
+  }
+
+  Future<void> getUserData({
+    required BuildContext context,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+
+      if (token == null || token.isEmpty) return;
+
+      http.Response tokenRes = await http.post(
+        Uri.parse('$uri/tokenIsvalid'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
+      );
+
+      final valid = jsonDecode(tokenRes.body);
+
+      if (valid == true) {
+        http.Response userRes = await http.get(
+          Uri.parse('$uri/'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token,
+          },
+        );
+
+        Provider.of<UserProvider>(context, listen: false).setUser(userRes.body);
+      }
+    } catch (e) {
       showSnackBar(context, "Error: ${e.toString()}", Colors.red);
     }
   }
