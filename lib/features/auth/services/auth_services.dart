@@ -67,7 +67,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      print(res.body);
+      // print(res.body);
       httpErrorHandle(
         response: res,
         context: context,
@@ -83,7 +83,7 @@ class AuthService {
         },
       );
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       showSnackBar(context, "Error: ${e.toString()}", Colors.red);
     }
   }
